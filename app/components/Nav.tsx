@@ -15,7 +15,19 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ];
 
-const LOGO_BASE64 = '/bigboss.png'; // Place your bigboss.png in /public folder
+const LOGO_SRC = '/bigboss.png';
+
+function useIsMobile(breakpoint = 900) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -23,24 +35,27 @@ export default function Nav() {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const pathname = usePathname();
   const sidebarRef = useRef<HTMLElement>(null);
+  const isMobile = useIsMobile();
 
+  // Scroll detection
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Lock body scroll when sidebar is open
+  // Close sidebar when route changes
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll when sidebar open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
-  // Close sidebar on outside click
+  // Close on outside click
   useEffect(() => {
     if (!menuOpen) return;
     const handler = (e: MouseEvent) => {
@@ -52,8 +67,93 @@ export default function Nav() {
     return () => document.removeEventListener('mousedown', handler);
   }, [menuOpen]);
 
+  // Close on Escape key
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, []);
+
   return (
     <>
+      <style>{`
+        .nav-desktop-links {
+          display: flex;
+          gap: 2rem;
+          align-items: center;
+        }
+        .nav-hamburger {
+          display: none;
+        }
+        .nav-backdrop {
+          display: none;
+        }
+        .nav-sidebar {
+          display: none;
+        }
+        @media (max-width: 900px) {
+          .nav-desktop-links {
+            display: none !important;
+          }
+          .nav-hamburger {
+            display: flex !important;
+          }
+          .nav-backdrop {
+            display: block !important;
+          }
+          .nav-sidebar {
+            display: flex !important;
+          }
+        }
+        .nav-link-underline {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 1px;
+          background: #CC0000;
+          transition: width 0.25s ease;
+          display: block;
+        }
+        .sidebar-link {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1rem 1.75rem;
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 1.1rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          text-decoration: none;
+          border-bottom: 1px solid #161616;
+          border-left: 2px solid transparent;
+          transition: all 0.2s ease;
+          color: #AAAAAA;
+          font-weight: 400;
+          background: transparent;
+        }
+        .sidebar-link:hover {
+          color: #F5F5F0;
+          background: rgba(255,255,255,0.03);
+          border-left-color: rgba(204,0,0,0.4);
+        }
+        .sidebar-link.active {
+          color: #CC0000;
+          font-weight: 700;
+          background: rgba(204,0,0,0.06);
+          border-left-color: #CC0000;
+        }
+        @keyframes sidebarLinkIn {
+          from { opacity: 0; transform: translateX(16px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        .sidebar-link-animated {
+          opacity: 0;
+          animation: sidebarLinkIn 0.3s ease forwards;
+        }
+      `}</style>
+
       {/* ── Navbar ── */}
       <nav
         style={{
@@ -66,36 +166,39 @@ export default function Nav() {
           background: scrolled ? 'rgba(8,8,8,0.97)' : 'transparent',
           borderBottom: scrolled ? '1px solid rgba(204,0,0,0.15)' : '1px solid transparent',
           backdropFilter: scrolled ? 'blur(24px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'none',
           boxShadow: scrolled ? '0 4px 32px rgba(0,0,0,0.5)' : 'none',
         }}
+        role="navigation"
+        aria-label="Main navigation"
       >
         <div
           style={{
             maxWidth: '1400px',
             margin: '0 auto',
-            padding: '0 2rem',
+            padding: '0 1.5rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             height: '72px',
           }}
         >
-          {/* ── Logo ── */}
+          {/* Logo */}
           <Link
             href="/"
             style={{
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.6rem',
               flexShrink: 0,
             }}
+            aria-label="BigBoss Corporate Consulting — Home"
           >
             <img
-              src={LOGO_BASE64}
+              src={LOGO_SRC}
               alt="BigBoss Corporate Consulting"
               style={{
-                height: '128px',
+                height: '120px',
                 width: 'auto',
                 objectFit: 'contain',
                 filter: 'drop-shadow(0 0 8px rgba(204,0,0,0.3))',
@@ -106,55 +209,41 @@ export default function Nav() {
             />
           </Link>
 
-          {/* ── Desktop nav ── */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '2rem',
-              alignItems: 'center',
-            }}
-            className="hidden md:flex"
-          >
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                style={{
-                  fontFamily: 'Barlow Condensed, sans-serif',
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  textDecoration: 'none',
-                  color:
-                    pathname === link.href
-                      ? '#CC0000'
-                      : hoveredLink === link.href
-                      ? '#F5F5F0'
-                      : '#888888',
-                  transition: 'color 0.2s ease',
-                  position: 'relative',
-                  paddingBottom: '4px',
-                }}
-                onMouseEnter={() => setHoveredLink(link.href)}
-                onMouseLeave={() => setHoveredLink(null)}
-              >
-                {link.label}
-                {/* Active/hover underline */}
-                <span
+          {/* Desktop nav links */}
+          <div className="nav-desktop-links">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              const isHovered = hoveredLink === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
                   style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    height: '1px',
-                    width: pathname === link.href || hoveredLink === link.href ? '100%' : '0%',
-                    background: '#CC0000',
-                    transition: 'width 0.25s ease',
-                    display: 'block',
+                    fontFamily: 'Barlow Condensed, sans-serif',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.15em',
+                    textTransform: 'uppercase',
+                    textDecoration: 'none',
+                    color: isActive ? '#CC0000' : isHovered ? '#F5F5F0' : '#888888',
+                    transition: 'color 0.2s ease',
+                    position: 'relative',
+                    paddingBottom: '4px',
+                    whiteSpace: 'nowrap',
                   }}
-                />
-              </Link>
-            ))}
+                  onMouseEnter={() => setHoveredLink(link.href)}
+                  onMouseLeave={() => setHoveredLink(null)}
+                >
+                  {link.label}
+                  <span
+                    className="nav-link-underline"
+                    style={{ width: isActive || isHovered ? '100%' : '0%' }}
+                  />
+                </Link>
+              );
+            })}
+
+            {/* CTA button */}
             <Link
               href="/contact"
               style={{
@@ -169,7 +258,8 @@ export default function Nav() {
                 color: '#F5F5F0',
                 border: '1px solid #CC0000',
                 transition: 'all 0.25s ease',
-                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.background = 'transparent';
@@ -184,24 +274,25 @@ export default function Nav() {
             </Link>
           </div>
 
-          {/* ── Mobile hamburger ── */}
+          {/* Hamburger */}
           <button
+            className="nav-hamburger"
             style={{
               background: 'none',
               border: '1px solid rgba(204,0,0,0.4)',
               cursor: 'pointer',
               color: '#F5F5F0',
-              display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               width: '42px',
               height: '42px',
-              transition: 'all 0.2s ease',
               flexShrink: 0,
+              transition: 'all 0.2s ease',
             }}
-            className="md:hidden"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
+            onClick={() => setMenuOpen(v => !v)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-sidebar"
             onMouseEnter={e => {
               e.currentTarget.style.background = 'rgba(204,0,0,0.1)';
               e.currentTarget.style.borderColor = '#CC0000';
@@ -216,41 +307,48 @@ export default function Nav() {
         </div>
       </nav>
 
-      {/* ── Backdrop ── */}
+      {/* Backdrop */}
       <div
+        className="nav-backdrop"
+        onClick={() => setMenuOpen(false)}
+        aria-hidden="true"
         style={{
           position: 'fixed',
           inset: 0,
           zIndex: 250,
-          background: 'rgba(0,0,0,0.65)',
+          background: 'rgba(0,0,0,0.7)',
           backdropFilter: 'blur(4px)',
+          WebkitBackdropFilter: 'blur(4px)',
           opacity: menuOpen ? 1 : 0,
           pointerEvents: menuOpen ? 'auto' : 'none',
           transition: 'opacity 0.35s ease',
         }}
-        className="md:hidden"
-        aria-hidden="true"
       />
 
-      {/* ── Sidebar ── */}
+      {/* Sidebar */}
       <aside
+        id="mobile-sidebar"
         ref={sidebarRef}
+        className="nav-sidebar"
         style={{
           position: 'fixed',
           top: 0,
           right: 0,
           bottom: 0,
           zIndex: 300,
-          width: 'min(340px, 88vw)',
-          background: '#0A0A0A',
+          width: 'min(320px, 85vw)',
+          background: '#080808',
           borderLeft: '1px solid rgba(204,0,0,0.2)',
-          display: 'flex',
           flexDirection: 'column',
           transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
           transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
-          boxShadow: menuOpen ? '-8px 0 48px rgba(0,0,0,0.7)' : 'none',
+          boxShadow: '-12px 0 64px rgba(0,0,0,0.8)',
+          overflowY: 'auto',
         }}
-        className="md:hidden"
+        aria-label="Mobile navigation"
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!menuOpen}
       >
         {/* Sidebar header */}
         <div
@@ -262,27 +360,36 @@ export default function Nav() {
             height: '72px',
             borderBottom: '1px solid #1A1A1A',
             flexShrink: 0,
+            position: 'sticky',
+            top: 0,
+            background: '#080808',
+            zIndex: 1,
           }}
         >
-          <Link href="/" onClick={() => setMenuOpen(false)} style={{ textDecoration: 'none' }}>
+          <Link
+            href="/"
+            onClick={() => setMenuOpen(false)}
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
+          >
             <img
-              src={LOGO_BASE64}
+              src={LOGO_SRC}
               alt="BigBoss"
-              style={{ height: '120px', width: 'auto', objectFit: 'contain' }}
+              style={{ height: '100px', width: 'auto', objectFit: 'contain' }}
             />
           </Link>
           <button
             onClick={() => setMenuOpen(false)}
             style={{
               background: 'none',
-              border: '1px solid #2A2A2A',
+              border: '1px solid #222222',
               cursor: 'pointer',
-              color: '#888888',
+              color: '#777777',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               width: '36px',
               height: '36px',
+              flexShrink: 0,
               transition: 'all 0.2s ease',
             }}
             aria-label="Close menu"
@@ -291,81 +398,62 @@ export default function Nav() {
               e.currentTarget.style.color = '#CC0000';
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.borderColor = '#2A2A2A';
-              e.currentTarget.style.color = '#888888';
+              e.currentTarget.style.borderColor = '#222222';
+              e.currentTarget.style.color = '#777777';
             }}
           >
             <X size={16} />
           </button>
         </div>
 
-        {/* Sidebar nav links */}
-        <nav
-          style={{
-            flex: 1,
-            overflowY: 'auto',
-            padding: '1.5rem 0',
-          }}
-        >
-          {navLinks.map((link, i) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '1rem 1.5rem',
-                fontFamily: 'Barlow Condensed, sans-serif',
-                fontSize: '1.05rem',
-                fontWeight: pathname === link.href ? 700 : 400,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                textDecoration: 'none',
-                color: pathname === link.href ? '#CC0000' : '#C0C0C0',
-                borderBottom: '1px solid #141414',
-                transition: 'all 0.2s ease',
-                // Stagger animation delay hint (for CSS animation)
-                animationDelay: `${i * 50}ms`,
-                background: pathname === link.href ? 'rgba(204,0,0,0.05)' : 'transparent',
-                borderLeft: pathname === link.href ? '2px solid #CC0000' : '2px solid transparent',
-              }}
-              onMouseEnter={e => {
-                if (pathname !== link.href) {
-                  e.currentTarget.style.color = '#F5F5F0';
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-                  e.currentTarget.style.borderLeftColor = 'rgba(204,0,0,0.4)';
-                }
-              }}
-              onMouseLeave={e => {
-                if (pathname !== link.href) {
-                  e.currentTarget.style.color = '#C0C0C0';
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.borderLeftColor = 'transparent';
-                }
-              }}
-            >
-              <span>{link.label}</span>
-              <ChevronRight
-                size={14}
-                style={{
-                  color: pathname === link.href ? '#CC0000' : '#3A3A3A',
-                  flexShrink: 0,
-                }}
-              />
-            </Link>
-          ))}
+        {/* Section label */}
+        <div style={{ padding: '1.5rem 1.75rem 0.5rem', flexShrink: 0 }}>
+          <p style={{
+            fontFamily: 'Barlow Condensed, sans-serif',
+            fontSize: '0.65rem',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            color: '#444444',
+            margin: 0,
+          }}>
+            Navigation
+          </p>
+        </div>
+
+        {/* Nav links */}
+        <nav style={{ flex: 1 }} aria-label="Mobile links">
+          {navLinks.map((link, i) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className={`sidebar-link${isActive ? ' active' : ''}${menuOpen ? ' sidebar-link-animated' : ''}`}
+                style={menuOpen ? { animationDelay: `${i * 45}ms` } : {}}
+              >
+                <span>{link.label}</span>
+                <ChevronRight
+                  size={14}
+                  style={{ color: isActive ? '#CC0000' : '#333333', flexShrink: 0 }}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Sidebar footer CTA */}
+        {/* Sidebar footer */}
         <div
           style={{
             padding: '1.5rem',
             borderTop: '1px solid #1A1A1A',
             flexShrink: 0,
+            background: '#080808',
           }}
         >
+          {/* Red accent bar */}
+          <div style={{ height: '2px', background: 'linear-gradient(90deg, #CC0000, transparent)', marginBottom: '1.25rem' }} />
+
           <Link
             href="/contact"
             onClick={() => setMenuOpen(false)}
@@ -383,31 +471,27 @@ export default function Nav() {
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
               textDecoration: 'none',
-              transition: 'all 0.25s ease',
+              transition: 'background 0.25s ease',
               width: '100%',
               boxSizing: 'border-box',
             }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = '#AA0000';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = '#CC0000';
-            }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#AA0000'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#CC0000'; }}
           >
             Get Started
           </Link>
-          <p
-            style={{
-              fontFamily: 'Barlow, sans-serif',
-              fontSize: '0.65rem',
-              color: '#444',
-              letterSpacing: '0.1em',
-              textAlign: 'center',
-              marginTop: '1rem',
-              textTransform: 'uppercase',
-            }}
-          >
-            BigBoss Corporate Consulting
+
+          <p style={{
+            fontFamily: 'Barlow, sans-serif',
+            fontSize: '0.6rem',
+            color: '#333333',
+            letterSpacing: '0.1em',
+            textAlign: 'center',
+            marginTop: '1rem',
+            textTransform: 'uppercase',
+            marginBottom: 0,
+          }}>
+            © {new Date().getFullYear()} BigBoss Corporate Consulting
           </p>
         </div>
       </aside>
