@@ -162,7 +162,7 @@ export default function Home() {
             gap: '0.5rem',
             fontWeight: 500
           }}>
-            <span style={{ fontSize: '0.6rem' }}>◆</span> BigBoss Corporate Consulting · Multidimensional Solutions
+            <span style={{ fontSize: '0.6rem' }}>◆</span> BigBoss Corporate Consulting · Business Transformation Solutions
           </div>
 
           {/* Heading */}
