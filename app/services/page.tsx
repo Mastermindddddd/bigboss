@@ -1,7 +1,10 @@
 'use client';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Briefcase, Globe, Users, Settings, Zap, Shield } from 'lucide-react';
+
+import suitImg from '@/public/images/suit.png';
 
 const services = [
   {
@@ -21,7 +24,7 @@ const services = [
   {
     icon: Globe,
     title: 'Trade & Market Access',
-    desc: 'We negotiate business export and import deals. Opening doors for Africa\'s companies into Europe and global markets. From compliance to first shipment.',
+    desc: "We negotiate business export and import deals. Opening doors for Africa's companies into Europe and global markets. From compliance to first shipment.",
     outcomes: ['New Markets', 'Export Revenue', 'Trade Deals'],
     color: '#CC0000',
   },
@@ -48,6 +51,111 @@ const services = [
   },
 ];
 
+const servicesStyles = `
+  .svc-hero-inner {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 3rem;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+  .svc-hero-img-wrap {
+    position: relative;
+    height: 460px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .svc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1rem;
+  }
+  .svc-watermark {
+    position: absolute;
+    top: 20%;
+    right: 5%;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(8rem, 16vw, 16rem);
+    color: rgba(204,0,0,0.05);
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .svc-cta-btn {
+    width: auto;
+  }
+
+  /* TABLET */
+  @media (max-width: 900px) {
+    .svc-hero-inner {
+      grid-template-columns: 1fr;
+      padding: 3rem 1.5rem;
+      gap: 2rem;
+      text-align: center;
+    }
+    .svc-hero-text p {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .svc-hero-img-wrap {
+      height: 340px;
+      order: -1;
+    }
+    .svc-watermark {
+      top: 8%;
+      right: -8%;
+      opacity: 0.7;
+    }
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .svc-hero-inner {
+      padding: 2.5rem 1.25rem;
+      gap: 1.5rem;
+    }
+    .svc-hero-img-wrap {
+      height: 240px;
+      margin-top: 10rem;
+    }
+    .svc-watermark {
+      font-size: clamp(5rem, 26vw, 8rem);
+      top: 4%;
+      right: -6%;
+    }
+    .svc-grid {
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+    .svc-cta-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .svc-section-pad {
+      padding: 3rem 1.25rem !important;
+    }
+    .card {
+      padding: 1.5rem !important;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .svc-hero-img-wrap {
+      height: 200px;
+    }
+  }
+`;
+
 export default function Services() {
   useEffect(() => {
     const els = document.querySelectorAll('.animate-on-scroll');
@@ -58,30 +166,70 @@ export default function Services() {
 
   return (
     <>
+      <style>{servicesStyles}</style>
+
       {/* HERO */}
-      <section style={{ minHeight: '55vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #0D0000)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ minHeight: '65vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #0D0000)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(204,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(204,0,0,0.04) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
-        <div style={{ position: 'absolute', top: '20%', right: '5%', fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '16rem', color: 'rgba(204,0,0,0.05)', lineHeight: 1, userSelect: 'none' }}>EXPERT</div>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '4rem 2rem', position: 'relative', zIndex: 1 }}>
-          <div className="section-label" style={{ marginBottom: '1rem' }}>Services</div>
-          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(3rem, 8vw, 7rem)', fontWeight: 300, color: '#F5F5F0', lineHeight: 0.95, marginBottom: '1.5rem' }}>
-            How We<br /><em style={{ color: '#CC0000', fontWeight: 700 }}>Create Success</em>
-          </h1>
-          <p style={{ fontSize: '1.1rem', color: '#888888', maxWidth: '500px', lineHeight: 1.8, marginBottom: '2rem' }}>
-            We partner with companies and governments across SADC to turn potential into performance.
-          </p>
-          <Link href="/contact" className="btn-primary">Request a Proposal</Link>
+        <div className="svc-watermark">EXPERT</div>
+
+        {/* Ambient red glow behind the figure */}
+        <div style={{
+          position: 'absolute', top: '50%', right: '8%', transform: 'translateY(-50%)',
+          width: 'clamp(280px, 38vw, 520px)', height: 'clamp(280px, 38vw, 520px)',
+          background: 'radial-gradient(circle, rgba(204,0,0,0.16) 0%, transparent 70%)',
+          filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0,
+        }} />
+
+        <div className="svc-hero-inner">
+          {/* Text side */}
+          <div className="svc-hero-text">
+            <div className="section-label" style={{ marginBottom: '1rem' }}>Services</div>
+            <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2.4rem, 8vw, 7rem)', fontWeight: 300, color: '#F5F5F0', lineHeight: 0.95, marginBottom: '1.5rem' }}>
+              How We<br /><em style={{ color: '#CC0000', fontWeight: 700 }}>Create Success</em>
+            </h1>
+            <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.1rem)', color: '#888888', maxWidth: '480px', lineHeight: 1.8, marginBottom: '2rem' }}>
+              We partner with companies and governments across SADC to turn potential into performance.
+            </p>
+            <Link href="/contact" className="btn-primary svc-cta-btn">Request a Proposal</Link>
+          </div>
+
+          {/* suit.jpeg — the figure of expertise and authority */}
+          <div className="svc-hero-img-wrap">
+            <div style={{ position: 'relative', width: '100%', maxWidth: '380px', aspectRatio: '736 / 920' }}>
+              {/* Soft red glow directly behind the figure */}
+              <div style={{
+                position: 'absolute', inset: '-10%',
+                background: 'radial-gradient(circle at 50% 40%, rgba(204,0,0,0.22) 0%, transparent 65%)',
+                filter: 'blur(30px)', zIndex: 0,
+              }} />
+              <Image
+                src={suitImg}
+                alt="Silhouette of a businessman in a suit and red tie, representing BigBoss expertise"
+                fill
+                priority
+                sizes="(max-width: 900px) 60vw, 380px"
+                style={{ objectFit: 'contain', zIndex: 1 }}
+              />
+              {/* Fade into the section background at the bottom so it sits naturally */}
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0, height: '25%',
+                background: 'linear-gradient(to top, #0D0000 0%, transparent 100%)',
+                zIndex: 2, pointerEvents: 'none',
+              }} />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* SERVICES GRID */}
-      <section style={{ padding: '6rem 2rem', background: '#0A0A0A' }}>
+      <section className="svc-section-pad" style={{ padding: 'clamp(4rem, 6vw, 6rem) 2rem', background: '#0A0A0A' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <div style={{ marginBottom: '3rem' }} className="animate-on-scroll">
             <div className="section-label" style={{ marginBottom: '1rem' }}>Our Expertise</div>
             <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', color: '#F5F5F0' }}>6 Areas of Excellence</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1rem' }}>
+          <div className="svc-grid">
             {services.map((svc, i) => (
               <div key={svc.title} className="card animate-on-scroll" style={{
                 background: '#1A1A1A',
@@ -121,13 +269,13 @@ export default function Services() {
       </section>
 
       {/* CTA */}
-      <section style={{ padding: '5rem 2rem', background: '#111111', textAlign: 'center', borderTop: '1px solid #2A2A2A' }}>
+      <section className="svc-section-pad" style={{ padding: 'clamp(3.5rem, 5vw, 5rem) 2rem', background: '#111111', textAlign: 'center', borderTop: '1px solid #2A2A2A' }}>
         <div style={{ maxWidth: '700px', margin: '0 auto' }} className="animate-on-scroll">
-          <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2rem, 4vw, 3.5rem)', color: '#F5F5F0', marginBottom: '1rem' }}>
+          <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', color: '#F5F5F0', marginBottom: '1rem' }}>
             Every challenge is different.<br /><em style={{ color: '#CC0000' }}>Let&apos;s talk about yours.</em>
           </h2>
-          <p style={{ color: '#888888', marginBottom: '2rem' }}>Our team of experts is ready to design a solution for your specific needs.</p>
-          <Link href="/contact" className="btn-primary">Talk to an Expert</Link>
+          <p style={{ color: '#888888', marginBottom: '2rem', fontSize: 'clamp(0.95rem, 2.5vw, 1rem)' }}>Our team of experts is ready to design a solution for your specific needs.</p>
+          <Link href="/contact" className="btn-primary svc-cta-btn">Talk to an Expert</Link>
         </div>
       </section>
     </>

@@ -1,7 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Upload } from 'lucide-react';
+
+import skillImg from '@/public/images/skill.jpeg';
+import pointImg from '@/public/images/point.jpeg';
 
 const roles = ['MBA Graduates', 'Accountants & Chartered Accountants', 'Management & Leadership Trainers', 'Programmers', 'SEO Specialists', 'IT Specialists', 'Project Managers', 'Journalists', 'And more...'];
 const values = ['Excellence', 'Discipline', 'Ownership', 'Integrity', 'Growth'];
@@ -10,6 +14,155 @@ const steps = [
   { num: '02', title: 'Excel', desc: 'Deliver results, lead projects, achieve recognition. Stand out through performance.' },
   { num: '03', title: 'Own', desc: 'High performers earn the opportunity to become partners in BigBoss CC.' },
 ];
+
+const careersStyles = `
+  .car-hero-pad {
+    padding: 4rem 2rem;
+  }
+  .car-watermark {
+    position: absolute;
+    right: -50px;
+    bottom: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(6rem, 14vw, 14rem);
+    color: rgba(204,0,0,0.05);
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* CULTURE */
+  .car-culture-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .car-culture-img-wrap {
+    position: relative;
+    height: 240px;
+    margin-bottom: 1.5rem;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .car-values-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-content: flex-start;
+  }
+  .car-value-card {
+    flex: 1 1 180px;
+  }
+
+  /* ROLES */
+  .car-roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1px;
+    background: #2A2A2A;
+  }
+
+  /* GROWTH PATH */
+  .car-path-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .car-path-img-wrap {
+    position: relative;
+    height: 380px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .car-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    background: #2A2A2A;
+  }
+  .car-step-card {
+    padding: 2.5rem 2rem;
+  }
+
+  /* FORM */
+  .car-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  /* TABLET */
+  @media (max-width: 900px) {
+    .car-hero-pad {
+      padding: 3rem 1.5rem;
+    }
+    .car-culture-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .car-path-wrap {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .car-path-img-wrap {
+      height: 280px;
+    }
+    .car-steps-grid {
+      grid-template-columns: 1fr;
+    }
+    .car-step-card {
+      padding: 2rem 1.75rem;
+    }
+    .car-watermark {
+      font-size: clamp(4rem, 18vw, 10rem);
+      opacity: 0.6;
+    }
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .car-hero-pad {
+      padding: 2.5rem 1.25rem;
+    }
+    .car-section-pad {
+      padding: 3rem 1.25rem !important;
+    }
+    .car-culture-img-wrap {
+      height: 180px;
+    }
+    .car-roles-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .car-path-img-wrap {
+      height: 200px;
+    }
+    .car-step-card {
+      padding: 1.75rem 1.25rem;
+    }
+    .car-value-card {
+      flex: 1 1 140px;
+      padding: 1.1rem 1.3rem !important;
+    }
+    .car-form-input {
+      padding: 0.8rem 1rem !important;
+      font-size: 0.9rem !important;
+    }
+    .car-submit-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .car-roles-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+`;
 
 export default function Careers() {
   const [form, setForm] = useState({ name: '', email: '', whatsapp: '', country: '', role: '', message: '' });
@@ -29,16 +182,18 @@ export default function Careers() {
 
   return (
     <>
+      <style>{careersStyles}</style>
+
       {/* HERO */}
       <section style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #000D00)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(204,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(204,0,0,0.04) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
-        <div style={{ position: 'absolute', right: '-50px', bottom: 0, fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '14rem', color: 'rgba(204,0,0,0.05)', lineHeight: 1, userSelect: 'none' }}>CAREERS</div>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '4rem 2rem', position: 'relative', zIndex: 1 }}>
+        <div className="car-watermark">CAREERS</div>
+        <div className="car-hero-pad" style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div className="section-label" style={{ marginBottom: '1rem' }}>Careers</div>
-          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(3rem, 8vw, 7rem)', fontWeight: 300, color: '#F5F5F0', lineHeight: 0.95, marginBottom: '1.5rem' }}>
+          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2.6rem, 8vw, 7rem)', fontWeight: 300, color: '#F5F5F0', lineHeight: 0.95, marginBottom: '1.5rem' }}>
             Grow With<br /><em style={{ color: '#CC0000', fontWeight: 700 }}>BigBoss CC</em>
           </h1>
-          <p style={{ fontSize: '1.1rem', color: '#888888', maxWidth: '500px', lineHeight: 1.8, marginBottom: '2.5rem' }}>
+          <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.1rem)', color: '#888888', maxWidth: '500px', lineHeight: 1.8, marginBottom: '2.5rem' }}>
             We train SADC talent to lead, build, and own. Start your career. Become a future partner.
           </p>
           <a href="#apply" className="btn-primary">Apply Now</a>
@@ -46,47 +201,60 @@ export default function Careers() {
       </section>
 
       {/* CULTURE */}
-      <section style={{ padding: '6rem 2rem', background: '#111111' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start' }} className="animate-on-scroll">
-          <div>
-            <div className="section-label" style={{ marginBottom: '1rem' }}>Culture</div>
-            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2rem, 4vw, 3.5rem)', color: '#F5F5F0', lineHeight: 1.05, marginBottom: '1.5rem' }}>
-              Train With Us.<br />Win With Us.<br /><em style={{ color: '#CC0000' }}>Own With Us.</em>
-            </h2>
-            <div className="accent-line" />
-            <p style={{ fontSize: '1.05rem', color: '#AAAAAA', lineHeight: 1.9, marginBottom: '1.5rem' }}>
-              At BigBoss, a job is just the start. We hire locals and develop them into their best selves. You&apos;ll be trained in the BigBoss culture of excellence, discipline, and ownership.
-            </p>
-            <p style={{ fontSize: '1rem', color: '#888888', lineHeight: 1.9 }}>
-              Do your job well. Achieve accolades. And your path won&apos;t stop at employee. It leads to partnership.
-            </p>
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignContent: 'flex-start' }}>
-            {values.map(v => (
-              <div key={v} style={{
-                background: '#1A1A1A', border: '1px solid #2A2A2A', borderLeft: '3px solid #CC0000',
-                padding: '1.5rem 2rem', flex: '1 1 180px',
-              }}>
-                <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.4rem', color: '#F5F5F0', fontStyle: 'italic' }}>{v}</span>
+      <section className="car-section-pad" style={{ padding: 'clamp(4rem, 6vw, 6rem) 2rem', background: '#111111' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }} className="animate-on-scroll">
+          <div className="car-culture-grid">
+            <div>
+              <div className="section-label" style={{ marginBottom: '1rem' }}>Culture</div>
+              <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', color: '#F5F5F0', lineHeight: 1.05, marginBottom: '1.5rem' }}>
+                Train With Us.<br />Win With Us.<br /><em style={{ color: '#CC0000' }}>Own With Us.</em>
+              </h2>
+              {/* skill.jpeg — mindset, learning, growth illustration */}
+              <div className="car-culture-img-wrap">
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(17,17,17,0.35) 0%, transparent 55%)', zIndex: 1 }} />
+                <Image
+                  src={skillImg}
+                  alt="Skill development mindmap: mindset, learning, knowledge, growth and advanced training"
+                  fill
+                  sizes="(max-width: 900px) 100vw, 50vw"
+                  style={{ objectFit: 'cover', filter: 'brightness(0.96)' }}
+                />
               </div>
-            ))}
+              <div className="accent-line" />
+              <p style={{ fontSize: '1.05rem', color: '#AAAAAA', lineHeight: 1.9, marginBottom: '1.5rem' }}>
+                At BigBoss, a job is just the start. We hire locals and develop them into their best selves. You&apos;ll be trained in the BigBoss culture of excellence, discipline, and ownership.
+              </p>
+              <p style={{ fontSize: '1rem', color: '#888888', lineHeight: 1.9 }}>
+                Do your job well. Achieve accolades. And your path won&apos;t stop at employee. It leads to partnership.
+              </p>
+            </div>
+            <div className="car-values-wrap">
+              {values.map(v => (
+                <div key={v} className="car-value-card" style={{
+                  background: '#1A1A1A', border: '1px solid #2A2A2A', borderLeft: '3px solid #CC0000',
+                  padding: '1.5rem 2rem',
+                }}>
+                  <span style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.4rem', color: '#F5F5F0', fontStyle: 'italic' }}>{v}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* WHO WE HIRE */}
-      <section style={{ padding: '6rem 2rem', background: '#0A0A0A' }}>
+      <section className="car-section-pad" style={{ padding: 'clamp(4rem, 6vw, 6rem) 2rem', background: '#0A0A0A' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <div style={{ marginBottom: '3rem' }} className="animate-on-scroll">
             <div className="section-label" style={{ marginBottom: '1rem' }}>Roles</div>
-            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2rem, 4vw, 3.5rem)', color: '#F5F5F0', marginBottom: '1rem' }}>
+            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', color: '#F5F5F0', marginBottom: '1rem' }}>
               Join Africa&apos;s Growth Team
             </h2>
             <p style={{ fontSize: '1rem', color: '#888888', maxWidth: '500px', lineHeight: 1.8 }}>
               We&apos;re looking for talent across SADC. If you&apos;re driven, skilled, and ready to build Africa&apos;s future, we want to hear from you.
             </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1px', background: '#2A2A2A' }}>
+          <div className="car-roles-grid">
             {roles.map((role, i) => (
               <div key={role} className="animate-on-scroll" style={{
                 background: '#0A0A0A', padding: '1.5rem 2rem',
@@ -96,7 +264,7 @@ export default function Careers() {
               }}
               onMouseEnter={e => (e.currentTarget.style.background = '#1A1A1A')}
               onMouseLeave={e => (e.currentTarget.style.background = '#0A0A0A')}>
-                <span style={{ color: '#CC0000', fontSize: '0.6rem' }}>◆</span>
+                <span style={{ color: '#CC0000', fontSize: '0.6rem', flexShrink: 0 }}>◆</span>
                 <span style={{ fontFamily: 'Barlow, sans-serif', fontSize: '0.95rem', color: '#CCCCCC', fontWeight: 400 }}>{role}</span>
               </div>
             ))}
@@ -105,38 +273,58 @@ export default function Careers() {
       </section>
 
       {/* GROWTH PATH */}
-      <section style={{ padding: '6rem 2rem', background: '#111111' }}>
+      <section className="car-section-pad" style={{ padding: 'clamp(4rem, 6vw, 6rem) 2rem', background: '#111111' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <div style={{ marginBottom: '3rem' }} className="animate-on-scroll">
             <div className="section-label" style={{ marginBottom: '1rem' }}>Your Path</div>
-            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2rem, 4vw, 3.5rem)', color: '#F5F5F0' }}>Your Path at BigBoss</h2>
+            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', color: '#F5F5F0' }}>Your Path at BigBoss</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0', background: '#2A2A2A' }}>
-            {steps.map((step, i) => (
-              <div key={step.num} className="animate-on-scroll" style={{
-                background: '#111111',
-                padding: '3rem',
-                borderTop: `3px solid ${i === 0 ? '#888888' : i === 1 ? '#CC0000' : '#D4A017'}`,
-                transitionDelay: `${i * 0.1}s`,
-                position: 'relative',
+
+          <div className="car-path-wrap animate-on-scroll">
+            {/* point.jpeg — direction, goals, momentum illustration */}
+            <div className="car-path-img-wrap">
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(204,0,0,0.1) 0%, transparent 50%)', zIndex: 1 }} />
+              <Image
+                src={pointImg}
+                alt="Illustration of a hand pointing the way toward a target, representing direction and growth"
+                fill
+                sizes="(max-width: 900px) 100vw, 38vw"
+                style={{ objectFit: 'cover' }}
+              />
+              <div style={{
+                position: 'absolute', bottom: '1.25rem', left: '1.25rem', zIndex: 2,
+                background: 'rgba(8,8,8,0.75)', backdropFilter: 'blur(8px)',
+                padding: '0.6rem 1rem', borderLeft: '3px solid #CC0000',
               }}>
-                <div style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '5rem', color: 'rgba(255,255,255,0.04)', lineHeight: 1, position: 'absolute', top: '1rem', right: '1.5rem' }}>{step.num}</div>
-                <div className="section-label" style={{ color: i === 0 ? '#888888' : i === 1 ? '#CC0000' : '#D4A017', marginBottom: '0.8rem' }}>Step {step.num}</div>
-                <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2.5rem', color: '#F5F5F0', marginBottom: '1rem' }}>{step.title}</h3>
-                <p style={{ fontSize: '0.9rem', color: '#888888', lineHeight: 1.8 }}>{step.desc}</p>
-                {i < 2 && <ArrowRight size={20} style={{ color: '#2A2A2A', marginTop: '1.5rem' }} />}
+                <p style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#CC0000', textTransform: 'uppercase', margin: 0 }}>Direction &amp; Drive</p>
               </div>
-            ))}
+            </div>
+
+            <div className="car-steps-grid">
+              {steps.map((step, i) => (
+                <div key={step.num} className="car-step-card" style={{
+                  background: '#111111',
+                  borderTop: `3px solid ${i === 0 ? '#888888' : i === 1 ? '#CC0000' : '#D4A017'}`,
+                  position: 'relative',
+                }}>
+                  <div style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '3.5rem', color: 'rgba(255,255,255,0.04)', lineHeight: 1, position: 'absolute', top: '1rem', right: '1.25rem' }}>{step.num}</div>
+                  <div className="section-label" style={{ color: i === 0 ? '#888888' : i === 1 ? '#CC0000' : '#D4A017', marginBottom: '0.8rem' }}>Step {step.num}</div>
+                  <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.7rem, 4vw, 2.5rem)', color: '#F5F5F0', marginBottom: '1rem' }}>{step.title}</h3>
+                  <p style={{ fontSize: '0.9rem', color: '#888888', lineHeight: 1.8 }}>{step.desc}</p>
+                  {i < 2 && <ArrowRight size={20} style={{ color: '#2A2A2A', marginTop: '1.5rem' }} />}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* APPLICATION FORM */}
-      <section id="apply" style={{ padding: '6rem 2rem', background: '#0A0A0A' }}>
+      <section id="apply" className="car-section-pad" style={{ padding: 'clamp(4rem, 6vw, 6rem) 2rem', background: '#0A0A0A' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <div style={{ marginBottom: '3rem' }} className="animate-on-scroll">
             <div className="section-label" style={{ marginBottom: '1rem' }}>Apply</div>
-            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(2rem, 4vw, 3.5rem)', color: '#F5F5F0', marginBottom: '1rem' }}>
+            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', color: '#F5F5F0', marginBottom: '1rem' }}>
               Ready to Build<br /><em style={{ color: '#CC0000' }}>With Us?</em>
             </h2>
             <p style={{ fontSize: '1rem', color: '#888888', lineHeight: 1.8 }}>
@@ -145,13 +333,13 @@ export default function Careers() {
           </div>
 
           {submitted ? (
-            <div className="animate-on-scroll" style={{ background: 'rgba(204,0,0,0.1)', border: '1px solid rgba(204,0,0,0.3)', padding: '3rem', textAlign: 'center' }}>
+            <div className="animate-on-scroll" style={{ background: 'rgba(204,0,0,0.1)', border: '1px solid rgba(204,0,0,0.3)', padding: '2.5rem 1.75rem', textAlign: 'center' }}>
               <div style={{ color: '#CC0000', fontSize: '2rem', marginBottom: '1rem' }}>◆</div>
               <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2rem', color: '#F5F5F0', marginBottom: '0.5rem' }}>Application Received</h3>
               <p style={{ color: '#888888' }}>We&apos;ll be in touch soon. Thank you for your interest in building Africa&apos;s future with us.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="animate-on-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+            <form onSubmit={handleSubmit} className="car-form-fields animate-on-scroll">
               {[
                 { key: 'name', label: 'Full Name', type: 'text', placeholder: 'Your full name' },
                 { key: 'email', label: 'Email Address', type: 'email', placeholder: 'your@email.com' },
@@ -162,6 +350,7 @@ export default function Careers() {
                 <div key={field.key}>
                   <label style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#888888', display: 'block', marginBottom: '0.4rem' }}>{field.label}</label>
                   <input
+                    className="car-form-input"
                     type={field.type}
                     placeholder={field.placeholder}
                     value={form[field.key as keyof typeof form]}
@@ -172,6 +361,7 @@ export default function Careers() {
                       color: '#F5F5F0', padding: '0.9rem 1.2rem',
                       fontFamily: 'Barlow, sans-serif', fontSize: '0.95rem',
                       outline: 'none', transition: 'border-color 0.2s',
+                      boxSizing: 'border-box',
                     }}
                     onFocus={e => (e.target.style.borderColor = '#CC0000')}
                     onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
@@ -181,6 +371,7 @@ export default function Careers() {
               <div>
                 <label style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#888888', display: 'block', marginBottom: '0.4rem' }}>Why BigBoss?</label>
                 <textarea
+                  className="car-form-input"
                   placeholder="Tell us why you want to join BigBoss and what you bring to the table..."
                   value={form.message}
                   onChange={e => setForm(prev => ({ ...prev, message: e.target.value }))}
@@ -190,12 +381,13 @@ export default function Careers() {
                     color: '#F5F5F0', padding: '0.9rem 1.2rem',
                     fontFamily: 'Barlow, sans-serif', fontSize: '0.95rem',
                     outline: 'none', resize: 'vertical', transition: 'border-color 0.2s',
+                    boxSizing: 'border-box',
                   }}
                   onFocus={e => (e.target.style.borderColor = '#CC0000')}
                   onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
                 />
               </div>
-              <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button type="submit" className="btn-primary car-submit-btn" style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <Upload size={16} />
                 Submit Application
               </button>
