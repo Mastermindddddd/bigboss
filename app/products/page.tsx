@@ -1,11 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Package, Clock, ArrowRight } from 'lucide-react';
+import { Package, Clock, ArrowRight, Loader2 } from 'lucide-react';
 
 export default function Products() {
   const [email, setEmail] = useState('');
   const [joined, setJoined] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const els = document.querySelectorAll('.animate-on-scroll');
@@ -13,6 +15,39 @@ export default function Products() {
     els.forEach(el => obs.observe(el));
     return () => obs.disconnect();
   }, []);
+
+  const handleJoinWaitlist = async () => {
+    if (!email) return;
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
+
+      setJoined(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleJoinWaitlist();
+    }
+  };
 
   return (
     <>
@@ -93,22 +128,46 @@ export default function Products() {
               <p style={{ color: '#888888', fontSize: '0.9rem', marginTop: '0.5rem' }}>We&apos;ll be in touch when early access opens.</p>
             </div>
           ) : (
-            <div style={{ display: 'flex', gap: '0', maxWidth: '500px', margin: '0 auto' }}>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                style={{
-                  flex: 1, background: '#1A1A1A', border: '1px solid #2A2A2A',
-                  borderRight: 'none', color: '#F5F5F0', padding: '0.9rem 1.2rem',
-                  fontFamily: 'Barlow, sans-serif', fontSize: '0.95rem', outline: 'none',
-                }}
-              />
-              <button onClick={() => email && setJoined(true)} className="btn-gold">
-                Join Waitlist
-              </button>
-            </div>
+            <>
+              {error && (
+                <div style={{
+                  background: 'rgba(204,0,0,0.1)', border: '1px solid rgba(204,0,0,0.35)',
+                  color: '#FF6B6B', padding: '0.8rem 1.2rem',
+                  fontFamily: 'Barlow, sans-serif', fontSize: '0.85rem',
+                  marginBottom: '1rem', maxWidth: '500px', marginLeft: 'auto', marginRight: 'auto',
+                }}>
+                  {error}
+                </div>
+              )}
+              <div style={{ display: 'flex', gap: '0', maxWidth: '500px', margin: '0 auto' }}>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="your@email.com"
+                  disabled={loading}
+                  style={{
+                    flex: 1, background: '#1A1A1A', border: '1px solid #2A2A2A',
+                    borderRight: 'none', color: '#F5F5F0', padding: '0.9rem 1.2rem',
+                    fontFamily: 'Barlow, sans-serif', fontSize: '0.95rem', outline: 'none',
+                  }}
+                />
+                <button
+                  onClick={handleJoinWaitlist}
+                  disabled={loading || !email}
+                  className="btn-gold"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.5rem',
+                    opacity: loading || !email ? 0.7 : 1,
+                    cursor: loading || !email ? 'not-allowed' : 'pointer',
+                  }}
+                >
+                  {loading ? <Loader2 size={16} className="animate-spin" /> : null}
+                  {loading ? 'Joining...' : 'Join Waitlist'}
+                </button>
+              </div>
+            </>
           )}
         </div>
       </section>

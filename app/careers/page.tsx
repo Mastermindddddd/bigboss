@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Upload } from 'lucide-react';
+import { ArrowRight, Upload, Loader2, CheckCircle2 } from 'lucide-react';
 
 import skillImg from '@/public/images/skill.jpeg';
 import pointImg from '@/public/images/point.jpeg';
@@ -94,6 +94,31 @@ const careersStyles = `
     flex-direction: column;
     gap: 1.2rem;
   }
+  .car-error-banner {
+    background: rgba(204,0,0,0.1);
+    border: 1px solid rgba(204,0,0,0.35);
+    color: #FF6B6B;
+    padding: 0.9rem 1.2rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.85rem;
+  }
+
+  /* SUCCESS */
+  .car-success-wrap {
+    text-align: center;
+    padding: 4rem 1.5rem;
+  }
+  .car-success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(204,0,0,0.12);
+    border: 1px solid rgba(204,0,0,0.4);
+    margin-bottom: 1.5rem;
+  }
 
   /* TABLET */
   @media (max-width: 900px) {
@@ -155,6 +180,9 @@ const careersStyles = `
       width: 100%;
       justify-content: center;
     }
+    .car-success-wrap {
+      padding: 3rem 1rem;
+    }
   }
 
   @media (max-width: 400px) {
@@ -167,6 +195,8 @@ const careersStyles = `
 export default function Careers() {
   const [form, setForm] = useState({ name: '', email: '', whatsapp: '', country: '', role: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const els = document.querySelectorAll('.animate-on-scroll');
@@ -175,9 +205,30 @@ export default function Careers() {
     return () => obs.disconnect();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/careers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -209,7 +260,6 @@ export default function Careers() {
               <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', color: '#F5F5F0', lineHeight: 1.05, marginBottom: '1.5rem' }}>
                 Train With Us.<br />Win With Us.<br /><em style={{ color: '#CC0000' }}>Own With Us.</em>
               </h2>
-              {/* skill.jpeg — mindset, learning, growth illustration */}
               <div className="car-culture-img-wrap">
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(17,17,17,0.35) 0%, transparent 55%)', zIndex: 1 }} />
                 <Image
@@ -281,7 +331,6 @@ export default function Careers() {
           </div>
 
           <div className="car-path-wrap animate-on-scroll">
-            {/* point.jpeg — direction, goals, momentum illustration */}
             <div className="car-path-img-wrap">
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(204,0,0,0.1) 0%, transparent 50%)', zIndex: 1 }} />
               <Image
@@ -319,79 +368,100 @@ export default function Careers() {
         </div>
       </section>
 
-      {/* APPLICATION FORM */}
+      {/* APPLICATION FORM — entire section swaps to success state */}
       <section id="apply" className="car-section-pad" style={{ padding: 'clamp(4rem, 6vw, 6rem) 2rem', background: '#0A0A0A' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '3rem' }} className="animate-on-scroll">
-            <div className="section-label" style={{ marginBottom: '1rem' }}>Apply</div>
-            <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', color: '#F5F5F0', marginBottom: '1rem' }}>
-              Ready to Build<br /><em style={{ color: '#CC0000' }}>With Us?</em>
-            </h2>
-            <p style={{ fontSize: '1rem', color: '#888888', lineHeight: 1.8 }}>
-              No open role fits you yet? Apply anyway. We&apos;re expanding into every SADC country and new roles open fast.
-            </p>
-          </div>
-
           {submitted ? (
-            <div className="animate-on-scroll" style={{ background: 'rgba(204,0,0,0.1)', border: '1px solid rgba(204,0,0,0.3)', padding: '2.5rem 1.75rem', textAlign: 'center' }}>
-              <div style={{ color: '#CC0000', fontSize: '2rem', marginBottom: '1rem' }}>◆</div>
-              <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2rem', color: '#F5F5F0', marginBottom: '0.5rem' }}>Application Received</h3>
-              <p style={{ color: '#888888' }}>We&apos;ll be in touch soon. Thank you for your interest in building Africa&apos;s future with us.</p>
+            <div className="car-success-wrap animate-on-scroll visible">
+              <div className="car-success-icon">
+                <CheckCircle2 size={32} style={{ color: '#CC0000' }} />
+              </div>
+              <div className="section-label" style={{ marginBottom: '1rem', justifyContent: 'center' }}>Application Received</div>
+              <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', color: '#F5F5F0', marginBottom: '1.25rem' }}>
+                Thank You,<br /><em style={{ color: '#CC0000' }}>{form.name || 'Future Partner'}</em>
+              </h2>
+              <p style={{ fontSize: '1rem', color: '#888888', lineHeight: 1.8, maxWidth: '480px', margin: '0 auto 2rem' }}>
+                We&apos;ve received your application and will be in touch soon. Thank you for your interest in building Africa&apos;s future with BigBoss CC.
+              </p>
+              <Link href="/" className="btn-primary" style={{ display: 'inline-block' }}>
+                Back to Home
+              </Link>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="car-form-fields animate-on-scroll">
-              {[
-                { key: 'name', label: 'Full Name', type: 'text', placeholder: 'Your full name' },
-                { key: 'email', label: 'Email Address', type: 'email', placeholder: 'your@email.com' },
-                { key: 'whatsapp', label: 'WhatsApp Number', type: 'tel', placeholder: '+27 XX XXX XXXX' },
-                { key: 'country', label: 'Country', type: 'text', placeholder: 'Your country' },
-                { key: 'role', label: 'Role of Interest', type: 'text', placeholder: 'e.g. MBA Graduate, Programmer, Project Manager...' },
-              ].map(field => (
-                <div key={field.key}>
-                  <label style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#888888', display: 'block', marginBottom: '0.4rem' }}>{field.label}</label>
-                  <input
+            <>
+              <div style={{ marginBottom: '3rem' }} className="animate-on-scroll">
+                <div className="section-label" style={{ marginBottom: '1rem' }}>Apply</div>
+                <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', color: '#F5F5F0', marginBottom: '1rem' }}>
+                  Ready to Build<br /><em style={{ color: '#CC0000' }}>With Us?</em>
+                </h2>
+                <p style={{ fontSize: '1rem', color: '#888888', lineHeight: 1.8 }}>
+                  No open role fits you yet? Apply anyway. We&apos;re expanding into every SADC country and new roles open fast.
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="car-form-fields animate-on-scroll">
+                {error && <div className="car-error-banner">{error}</div>}
+
+                {[
+                  { key: 'name', label: 'Full Name', type: 'text', placeholder: 'Your full name' },
+                  { key: 'email', label: 'Email Address', type: 'email', placeholder: 'your@email.com' },
+                  { key: 'whatsapp', label: 'WhatsApp Number', type: 'tel', placeholder: '+27 XX XXX XXXX' },
+                  { key: 'country', label: 'Country', type: 'text', placeholder: 'Your country' },
+                  { key: 'role', label: 'Role of Interest', type: 'text', placeholder: 'e.g. MBA Graduate, Programmer, Project Manager...' },
+                ].map(field => (
+                  <div key={field.key}>
+                    <label style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#888888', display: 'block', marginBottom: '0.4rem' }}>{field.label}</label>
+                    <input
+                      className="car-form-input"
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      value={form[field.key as keyof typeof form]}
+                      onChange={e => setForm(prev => ({ ...prev, [field.key]: e.target.value }))}
+                      required
+                      disabled={loading}
+                      style={{
+                        width: '100%', background: '#1A1A1A', border: '1px solid #2A2A2A',
+                        color: '#F5F5F0', padding: '0.9rem 1.2rem',
+                        fontFamily: 'Barlow, sans-serif', fontSize: '0.95rem',
+                        outline: 'none', transition: 'border-color 0.2s',
+                        boxSizing: 'border-box',
+                      }}
+                      onFocus={e => (e.target.style.borderColor = '#CC0000')}
+                      onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
+                    />
+                  </div>
+                ))}
+                <div>
+                  <label style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#888888', display: 'block', marginBottom: '0.4rem' }}>Why BigBoss?</label>
+                  <textarea
                     className="car-form-input"
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    value={form[field.key as keyof typeof form]}
-                    onChange={e => setForm(prev => ({ ...prev, [field.key]: e.target.value }))}
-                    required
+                    placeholder="Tell us why you want to join BigBoss and what you bring to the table..."
+                    value={form.message}
+                    onChange={e => setForm(prev => ({ ...prev, message: e.target.value }))}
+                    rows={5}
+                    disabled={loading}
                     style={{
                       width: '100%', background: '#1A1A1A', border: '1px solid #2A2A2A',
                       color: '#F5F5F0', padding: '0.9rem 1.2rem',
                       fontFamily: 'Barlow, sans-serif', fontSize: '0.95rem',
-                      outline: 'none', transition: 'border-color 0.2s',
+                      outline: 'none', resize: 'vertical', transition: 'border-color 0.2s',
                       boxSizing: 'border-box',
                     }}
                     onFocus={e => (e.target.style.borderColor = '#CC0000')}
                     onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
                   />
                 </div>
-              ))}
-              <div>
-                <label style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#888888', display: 'block', marginBottom: '0.4rem' }}>Why BigBoss?</label>
-                <textarea
-                  className="car-form-input"
-                  placeholder="Tell us why you want to join BigBoss and what you bring to the table..."
-                  value={form.message}
-                  onChange={e => setForm(prev => ({ ...prev, message: e.target.value }))}
-                  rows={5}
-                  style={{
-                    width: '100%', background: '#1A1A1A', border: '1px solid #2A2A2A',
-                    color: '#F5F5F0', padding: '0.9rem 1.2rem',
-                    fontFamily: 'Barlow, sans-serif', fontSize: '0.95rem',
-                    outline: 'none', resize: 'vertical', transition: 'border-color 0.2s',
-                    boxSizing: 'border-box',
-                  }}
-                  onFocus={e => (e.target.style.borderColor = '#CC0000')}
-                  onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
-                />
-              </div>
-              <button type="submit" className="btn-primary car-submit-btn" style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Upload size={16} />
-                Submit Application
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  className="btn-primary car-submit-btn"
+                  disabled={loading}
+                  style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+                >
+                  {loading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
+                  {loading ? 'Submitting...' : 'Submit Application'}
+                </button>
+              </form>
+            </>
           )}
         </div>
       </section>

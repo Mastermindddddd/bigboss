@@ -1,12 +1,14 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Mail, MessageSquare, Briefcase } from 'lucide-react';
+import { Mail, MessageSquare, Briefcase, Loader2, CheckCircle2 } from 'lucide-react';
 
 const sadc = ['Angola','Botswana','Comoros','DRC','Eswatini','Lesotho','Madagascar','Malawi','Mauritius','Mozambique','Namibia','Seychelles','South Africa','Tanzania','Zambia','Zimbabwe'];
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', whatsapp: '', country: '', type: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const els = document.querySelectorAll('.animate-on-scroll');
@@ -15,9 +17,30 @@ export default function Contact() {
     return () => obs.disconnect();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const cards = [
@@ -108,12 +131,28 @@ export default function Contact() {
               <div className="section-label" style={{ marginBottom: '1.5rem' }}>Quick Contact</div>
               {submitted ? (
                 <div style={{ background: 'rgba(204,0,0,0.1)', border: '1px solid rgba(204,0,0,0.3)', padding: '3rem', textAlign: 'center' }}>
-                  <div style={{ color: '#CC0000', fontSize: '2rem', marginBottom: '1rem' }}>◆</div>
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    width: 56, height: 56, borderRadius: '50%',
+                    background: 'rgba(204,0,0,0.12)', border: '1px solid rgba(204,0,0,0.4)',
+                    marginBottom: '1.25rem',
+                  }}>
+                    <CheckCircle2 size={28} style={{ color: '#CC0000' }} />
+                  </div>
                   <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2rem', color: '#F5F5F0', marginBottom: '0.5rem' }}>Message Sent</h3>
-                  <p style={{ color: '#888888' }}>We&apos;ll be in touch within 24–48 hours.</p>
+                  <p style={{ color: '#888888' }}>Thank you, {form.name || 'there'}. We&apos;ll be in touch within 24–48 hours.</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {error && (
+                    <div style={{
+                      background: 'rgba(204,0,0,0.1)', border: '1px solid rgba(204,0,0,0.35)',
+                      color: '#FF6B6B', padding: '0.9rem 1.2rem',
+                      fontFamily: 'Barlow, sans-serif', fontSize: '0.85rem',
+                    }}>
+                      {error}
+                    </div>
+                  )}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     {[
                       { key: 'name', label: 'Full Name', placeholder: 'Your name', type: 'text' },
@@ -129,7 +168,8 @@ export default function Contact() {
                           value={form[f.key as keyof typeof form]}
                           onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
                           required
-                          style={{ width: '100%', background: '#1A1A1A', border: '1px solid #2A2A2A', color: '#F5F5F0', padding: '0.75rem 1rem', fontFamily: 'Barlow, sans-serif', fontSize: '0.9rem', outline: 'none' }}
+                          disabled={loading}
+                          style={{ width: '100%', background: '#1A1A1A', border: '1px solid #2A2A2A', color: '#F5F5F0', padding: '0.75rem 1rem', fontFamily: 'Barlow, sans-serif', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
                           onFocus={e => (e.target.style.borderColor = '#CC0000')}
                           onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
                         />
@@ -142,7 +182,8 @@ export default function Contact() {
                       value={form.type}
                       onChange={e => setForm(p => ({ ...p, type: e.target.value }))}
                       required
-                      style={{ width: '100%', background: '#1A1A1A', border: '1px solid #2A2A2A', color: form.type ? '#F5F5F0' : '#666666', padding: '0.75rem 1rem', fontFamily: 'Barlow, sans-serif', fontSize: '0.9rem', outline: 'none' }}
+                      disabled={loading}
+                      style={{ width: '100%', background: '#1A1A1A', border: '1px solid #2A2A2A', color: form.type ? '#F5F5F0' : '#666666', padding: '0.75rem 1rem', fontFamily: 'Barlow, sans-serif', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
                       onFocus={e => (e.target.style.borderColor = '#CC0000')}
                       onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
                     >
@@ -160,12 +201,24 @@ export default function Contact() {
                       onChange={e => setForm(p => ({ ...p, message: e.target.value }))}
                       rows={4}
                       required
-                      style={{ width: '100%', background: '#1A1A1A', border: '1px solid #2A2A2A', color: '#F5F5F0', padding: '0.75rem 1rem', fontFamily: 'Barlow, sans-serif', fontSize: '0.9rem', outline: 'none', resize: 'vertical' }}
+                      disabled={loading}
+                      style={{ width: '100%', background: '#1A1A1A', border: '1px solid #2A2A2A', color: '#F5F5F0', padding: '0.75rem 1rem', fontFamily: 'Barlow, sans-serif', fontSize: '0.9rem', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
                       onFocus={e => (e.target.style.borderColor = '#CC0000')}
                       onBlur={e => (e.target.style.borderColor = '#2A2A2A')}
                     />
                   </div>
-                  <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start' }}>Send Message</button>
+                  <button
+                    type="submit"
+                    className="btn-primary"
+                    disabled={loading}
+                    style={{
+                      alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '0.5rem',
+                      opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    {loading ? <Loader2 size={16} className="animate-spin" /> : null}
+                    {loading ? 'Sending...' : 'Send Message'}
+                  </button>
                 </form>
               )}
             </div>
