@@ -8,6 +8,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
+  { href: '/digital-solutions', label: 'Digital Solutions' },
   { href: '/products', label: 'Products' },
   { href: '/impact', label: 'Impact' },
   { href: '/partnerships', label: 'Partnerships' },
@@ -17,7 +18,7 @@ const navLinks = [
 
 const LOGO_SRC = '/bigboss.png';
 
-function useIsMobile(breakpoint = 900) {
+function useIsMobile(breakpoint = 1200) {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
@@ -93,7 +94,7 @@ export default function Nav() {
         .nav-sidebar {
           display: none;
         }
-        @media (max-width: 900px) {
+        @media (max-width: 1200px) {
           .nav-desktop-links {
             display: none !important;
           }
@@ -156,6 +157,7 @@ export default function Nav() {
 
       {/* ── Navbar ── */}
       <nav
+        className="bb-site-navigation"
         style={{
           position: 'fixed',
           top: 0,
@@ -210,13 +212,14 @@ export default function Nav() {
           </Link>
 
           {/* Desktop nav links */}
-          <div className="nav-desktop-links">
+          <div className="nav-desktop-links bb-desktop-links">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               const isHovered = hoveredLink === link.href;
               return (
                 <Link
                   key={link.href}
+                  className={`bb-nav-link ${isActive ? "is-active" : ""}`}
                   href={link.href}
                   style={{
                     fontFamily: 'Barlow Condensed, sans-serif',
@@ -276,7 +279,7 @@ export default function Nav() {
 
           {/* Hamburger */}
           <button
-            className="nav-hamburger"
+            className="nav-hamburger bb-mobile-nav"
             style={{
               background: 'none',
               border: '1px solid rgba(204,0,0,0.4)',
@@ -292,7 +295,7 @@ export default function Nav() {
             onClick={() => setMenuOpen(v => !v)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
-            aria-controls="mobile-sidebar"
+            aria-controls="mobile-navigation"
             onMouseEnter={e => {
               e.currentTarget.style.background = 'rgba(204,0,0,0.1)';
               e.currentTarget.style.borderColor = '#CC0000';
@@ -309,7 +312,7 @@ export default function Nav() {
 
       {/* Backdrop */}
       <div
-        className="nav-backdrop"
+        className="nav-backdrop bb-mobile-nav"
         onClick={() => setMenuOpen(false)}
         aria-hidden="true"
         style={{
@@ -327,9 +330,9 @@ export default function Nav() {
 
       {/* Sidebar */}
       <aside
-        id="mobile-sidebar"
+        id="mobile-navigation"
         ref={sidebarRef}
-        className="nav-sidebar"
+        className="nav-sidebar bb-mobile-nav"
         style={{
           position: 'fixed',
           top: 0,
@@ -349,6 +352,7 @@ export default function Nav() {
         role="dialog"
         aria-modal="true"
         aria-hidden={!menuOpen}
+        inert={!menuOpen}
       >
         {/* Sidebar header */}
         <div

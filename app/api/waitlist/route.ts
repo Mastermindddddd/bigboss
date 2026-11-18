@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import clientPromise from '@/lib/mongodb';
+import getMongoClient from '@/lib/mongodb';
 
 interface WaitlistEntry {
   email: string;
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('bigboss');
     const collection = db.collection<WaitlistEntry>('waitlist');
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 // Optional: view waitlist at /api/waitlist (protect or remove before production)
 export async function GET() {
   try {
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('bigboss');
     const collection = db.collection<WaitlistEntry>('waitlist');
 

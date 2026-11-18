@@ -1,4 +1,5 @@
 'use client';
+import HeroScene from '@/app/components/HeroScene';
 import { useEffect, useState } from 'react';
 import { Mail, MessageSquare, Briefcase, Loader2, CheckCircle2 } from 'lucide-react';
 
@@ -73,7 +74,8 @@ export default function Contact() {
   return (
     <>
       {/* HERO */}
-      <section style={{ minHeight: '50vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #0D0000)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+      <section className="bb-corporate-hero bb-hero-contact" style={{ minHeight: '50vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #0D0000)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+        <HeroScene variant="contact"/>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(204,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(204,0,0,0.04) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '4rem 2rem', position: 'relative', zIndex: 1 }}>
           <div className="section-label" style={{ marginBottom: '1rem' }}>Contact</div>

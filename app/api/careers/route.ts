@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import clientPromise from '@/lib/mongodb';
+import getMongoClient from '@/lib/mongodb';
 
 interface CareerApplication {
   name: string;
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       source: 'careers-page',
     };
 
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('bigboss');
     const collection = db.collection<CareerApplication>('career_applications');
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 // Optional: lets you view submissions at /api/careers (protect this in production)
 export async function GET() {
   try {
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('bigboss');
     const collection = db.collection<CareerApplication>('career_applications');
 

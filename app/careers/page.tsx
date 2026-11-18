@@ -1,4 +1,5 @@
 'use client';
+import HeroScene from '@/app/components/HeroScene';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -236,7 +237,8 @@ export default function Careers() {
       <style>{careersStyles}</style>
 
       {/* HERO */}
-      <section style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #000D00)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+      <section className="bb-corporate-hero bb-hero-careers" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #000D00)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+        <HeroScene variant="careers"/>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(204,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(204,0,0,0.04) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
         <div className="car-watermark">CAREERS</div>
         <div className="car-hero-pad" style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>

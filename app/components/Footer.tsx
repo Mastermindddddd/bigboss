@@ -32,8 +32,8 @@ export default function Footer() {
           <div>
             <div className="section-label" style={{ marginBottom: '1.2rem' }}>Navigation</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-              {['About','Services','Products','Impact','Partnerships','Careers','Contact'].map(page => (
-                <Link key={page} href={`/${page.toLowerCase()}`} style={{
+              {['About','Services','Digital Solutions','Products','Impact','Partnerships','Careers','Contact'].map(page => (
+                <Link key={page} href={`/${page.toLowerCase().replaceAll(" ", "-")}`} style={{
                   color: '#888888', textDecoration: 'none', fontSize: '0.85rem',
                   fontFamily: 'Barlow, sans-serif', transition: 'color 0.2s',
                 }}
@@ -101,7 +101,7 @@ export default function Footer() {
           </p>
           <div style={{ display: 'flex', gap: '1.5rem' }}>
             <Link href="/privacy" style={{ fontSize: '0.75rem', color: '#444444', textDecoration: 'none', fontFamily: 'Barlow Condensed, sans-serif', letterSpacing: '0.05em' }}>Privacy</Link>
-            <span style={{ fontSize: '0.75rem', color: '#444444', fontFamily: 'Barlow Condensed, sans-serif', letterSpacing: '0.05em' }}>Multidimensional Solutions</span>
+            <span style={{ fontSize: '0.75rem', color: '#444444', fontFamily: 'Barlow Condensed, sans-serif', letterSpacing: '0.05em' }}>Organisation Transformation Solutions</span>
           </div>
         </div>
       </div>

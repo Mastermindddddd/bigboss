@@ -1,12 +1,14 @@
 {
   "name": "bigboss",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test:pricing": "node scripts/verify-pricing.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.17.0",

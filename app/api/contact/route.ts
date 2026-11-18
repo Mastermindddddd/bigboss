@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import clientPromise from '@/lib/mongodb';
+import getMongoClient from '@/lib/mongodb';
 
 interface ContactSubmission {
   name: string;
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       source: 'contact-page',
     };
 
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('bigboss');
     const collection = db.collection<ContactSubmission>('contact_submissions');
 
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 // Optional: view submissions at /api/contact (protect or remove before production)
 export async function GET() {
   try {
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('bigboss');
     const collection = db.collection<ContactSubmission>('contact_submissions');
 

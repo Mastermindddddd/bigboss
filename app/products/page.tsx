@@ -1,4 +1,5 @@
 'use client';
+import HeroScene from '@/app/components/HeroScene';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Package, Clock, ArrowRight, Loader2 } from 'lucide-react';
@@ -52,7 +53,8 @@ export default function Products() {
   return (
     <>
       {/* HERO */}
-      <section style={{ minHeight: '55vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #00080D)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+      <section className="bb-corporate-hero bb-hero-products" style={{ minHeight: '55vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #00080D)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+        <HeroScene variant="products"/>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(212,160,23,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(212,160,23,0.04) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
         <div style={{ position: 'absolute', right: '-80px', bottom: 0, fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800, fontSize: '14rem', color: 'rgba(212,160,23,0.05)', lineHeight: 1, userSelect: 'none' }}>PRODUCTS</div>
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '4rem 2rem', position: 'relative', zIndex: 1 }}>

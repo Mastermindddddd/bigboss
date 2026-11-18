@@ -1,4 +1,5 @@
 'use client';
+import HeroScene from '@/app/components/HeroScene';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -222,7 +223,8 @@ export default function Services() {
       <style>{servicesStyles}</style>
 
       {/* HERO */}
-      <section style={{ minHeight: '65vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #0D0000)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+      <section className="bb-corporate-hero bb-hero-services" style={{ minHeight: '65vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #0D0000)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+        <HeroScene variant="services" />
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(204,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(204,0,0,0.04) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
         <div className="svc-watermark">EXPERT</div>
 

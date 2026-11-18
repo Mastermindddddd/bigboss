@@ -1,4 +1,5 @@
 'use client';
+import HeroScene from '@/app/components/HeroScene';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -255,7 +256,7 @@ export default function Home() {
       <style>{homeStyles}</style>
 
       {/* ── HERO ── */}
-      <section style={{
+      <section className="bb-corporate-hero bb-hero-home" style={{
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
@@ -264,6 +265,7 @@ export default function Home() {
         background: theme.colorBackground,
         paddingTop: '80px',
       }}>
+        <HeroScene variant="home" />
         {/* Grid */}
         <div style={{
           position: 'absolute', inset: 0,
@@ -297,7 +299,7 @@ export default function Home() {
               color: theme.colorAccent, display: 'flex', alignItems: 'center',
               gap: '0.5rem', fontWeight: 500,
             }}>
-              <span style={{ fontSize: '0.6rem' }}>◆</span> BigBoss Corporate Consulting · Business Transformation Solutions
+              <span style={{ fontSize: '0.6rem' }}>◆</span> BigBoss Corporate Consulting · Organisation Transformation Solutions
             </div>
             <h1 style={{
               fontFamily: 'Cormorant Garamond, serif',
@@ -321,6 +323,7 @@ export default function Home() {
                 padding: '1rem 2.25rem', fontWeight: 500,
                 letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '0.85rem',
               }}>Partner With Us</Link>
+              <Link href="/digital-solutions" className="btn-secondary" style={{ padding: '1rem 2.25rem', fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '0.85rem' }}>Explore Digital Solutions</Link>
               <Link href="/careers" className="btn-secondary" style={{
                 padding: '1rem 2.25rem', fontWeight: 500,
                 letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '0.85rem',

@@ -1,32 +1,29 @@
-import { MongoClient, MongoClientOptions } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Please add your MONGODB_URI to .env.local');
-}
-
-const uri = process.env.MONGODB_URI;
-const options: MongoClientOptions = {};
-
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
+let clientPromise: Promise<MongoClient> | undefined;
 
 declare global {
   // eslint-disable-next-line no-var
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-if (process.env.NODE_ENV === 'development') {
-  // In dev mode, use a global variable so the value
-  // is preserved across module reloads caused by HMR.
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    global._mongoClientPromise = client.connect();
-  }
-  clientPromise = global._mongoClientPromise;
-} else {
-  // In production, it's best not to use a global variable.
-  client = new MongoClient(uri, options);
-  clientPromise = client.connect();
-}
+export default function getMongoClient(): Promise<MongoClient> {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) throw new Error('MONGODB_URI is not configured.');
 
-export default clientPromise;
+  const development = process.env.NODE_ENV === 'development';
+  const cached = development ? global._mongoClientPromise : clientPromise;
+  if (cached) return cached;
+
+  const client = new MongoClient(uri);
+  const pending = client.connect().catch((error: unknown) => {
+    if (development) global._mongoClientPromise = undefined;
+    else clientPromise = undefined;
+    void client.close().catch(() => {});
+    throw error;
+  });
+
+  if (development) global._mongoClientPromise = pending;
+  else clientPromise = pending;
+  return pending;
+}
