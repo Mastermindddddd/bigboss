@@ -4,6 +4,20 @@ Verified on 18 November 2026 for `Mastermindddddd/bigboss`, based on its existin
 
 The update brings the approved Digital Solutions work into the live website repository while retaining its newer corporate content, imagery, Academy page, analytics and MongoDB-backed submission routes.
 
+## Hero layout correction — 18 November 2026
+
+Home, About and Services now give the animated canvas and glass artwork a dedicated grid column. The previous hero picture blocks were removed from those hero sections. On smaller screens, the animation follows the text in normal document flow.
+
+- Checked all three affected pages at viewport widths of 1280, 900 and 390 pixels: nine layout checks passed.
+- Measured no intersections between the hero copy and animation rectangles.
+- Verified that the affected hero sections contain no legacy photo elements and that document width stays within the viewport.
+- Production build and TypeScript passed; all 18 generated pages completed.
+- Browser console checks returned no warnings or errors.
+- Content after the hero sections matched the previous source exactly after normalising line endings. Body photography, brand assets, Digital Solutions, pricing, dashboards, Academy and API routes were unchanged.
+- The existing reduced-motion and offscreen canvas controls remain in place.
+
+The checks below record the original website integration before this layout correction.
+
 ## Checks completed
 
 - Production build and TypeScript passed; all 18 generated pages completed.

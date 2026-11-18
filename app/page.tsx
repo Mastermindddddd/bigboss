@@ -7,7 +7,6 @@ import { ArrowRight, TrendingUp, Globe, Users, Briefcase, Zap, Shield } from 'lu
 
 // Images
 import planImg from '@/public/images/plan.jpeg';
-import thunesImg from '@/public/images/thunes.jpeg';
 import supplyImg from '@/public/images/supply.jpeg';
 import teamImg from '@/public/images/team.jpeg';
 import growthImg from '@/public/images/growth.jpeg';
@@ -256,7 +255,7 @@ export default function Home() {
       <style>{homeStyles}</style>
 
       {/* ── HERO ── */}
-      <section className="bb-corporate-hero bb-hero-home" style={{
+      <section className="bb-corporate-hero bb-hero-home bb-hero-composed" style={{
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
@@ -265,7 +264,6 @@ export default function Home() {
         background: theme.colorBackground,
         paddingTop: '80px',
       }}>
-        <HeroScene variant="home" />
         {/* Grid */}
         <div style={{
           position: 'absolute', inset: 0,
@@ -353,70 +351,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* thunes.jpeg — hero visual with gold corner frame and floating badge */}
-          <div className="hero-img-frame hero-img-reveal" style={{ animationDelay: '0.3s' }}>
-            {/* Gold corner accent — offset behind the frame */}
-            <div style={{
-              position: 'absolute', top: '-14px', left: '-14px',
-              width: '70px', height: '70px',
-              borderTop: '2px solid #D4A017', borderLeft: '2px solid #D4A017',
-              zIndex: 2, pointerEvents: 'none',
-            }} />
-            <div style={{
-              position: 'absolute', bottom: '-14px', right: '-14px',
-              width: '70px', height: '70px',
-              borderBottom: '2px solid #CC0000', borderRight: '2px solid #CC0000',
-              zIndex: 2, pointerEvents: 'none',
-            }} />
-
-            <div className="hero-img-wrap">
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: 'linear-gradient(135deg, rgba(204,0,0,0.18) 0%, transparent 55%)',
-                zIndex: 1,
-              }} />
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: 'linear-gradient(to top, rgba(8,8,8,0.55) 0%, transparent 35%)',
-                zIndex: 1,
-              }} />
-              <Image
-                src={thunesImg}
-                alt="Strategic business planning and connections"
-                fill
-                loading="eager"
-                sizes="(max-width: 900px) 100vw, 50vw"
-                style={{ objectFit: 'cover', filter: 'brightness(0.88) contrast(1.05)' }}
-              />
-              <div style={{
-                position: 'absolute', bottom: '1.5rem', left: '1.5rem', zIndex: 2,
-                background: 'rgba(8,8,8,0.75)', backdropFilter: 'blur(8px)',
-                padding: '0.7rem 1.2rem', borderLeft: '3px solid #CC0000',
-              }}>
-                <p style={{
-                  fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.7rem',
-                  letterSpacing: '0.15em', color: '#CC0000', textTransform: 'uppercase', margin: 0,
-                }}>Strategy &amp; Planning</p>
-              </div>
-            </div>
-
-            {/* Floating badge breaking the frame edge */}
-            <div className="hero-badge-reveal" style={{
-              position: 'absolute', top: '24px', right: '14px', zIndex: 3,
-              animationDelay: '0.9s',
-              background: '#0A0A0A',
-              border: '1px solid rgba(212,160,23,0.35)',
-              padding: '0.85rem 1.1rem',
-              boxShadow: '0 16px 40px -10px rgba(0,0,0,0.6)',
-              display: 'flex', alignItems: 'center', gap: '0.6rem',
-            }}>
-              <span style={{ color: '#D4A017', fontSize: '1.1rem', lineHeight: 1 }}>◆</span>
-              <div>
-                <p style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.1rem', color: '#F5F5F0', margin: 0, lineHeight: 1.1, fontStyle: 'italic' }}>16 Nations</p>
-                <p style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: '#777777', margin: 0 }}>One Vision</p>
-              </div>
-            </div>
-          </div>
+          {/* Dedicated animated hero visual */}
+          <HeroScene variant="home" contained />
         </div>
 
         {/* Scroll cue */}

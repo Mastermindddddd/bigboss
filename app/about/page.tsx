@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // Import images
-import partnershipImg from '@/public/images/partnership.jpeg';
 import focusImg from '@/public/images/focus.jpeg';
 import goalsImg from '@/public/images/goals.jpeg';
 import managementImg from '@/public/images/manegement.jpeg';
@@ -181,8 +180,7 @@ export default function About() {
       <style>{responsive}</style>
 
       {/* HERO */}
-      <section className="bb-corporate-hero bb-hero-about" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808 0%, #100000 100%)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
-        <HeroScene variant="about"/>
+      <section className="bb-corporate-hero bb-hero-about bb-hero-composed" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808 0%, #100000 100%)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(204,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(204,0,0,0.04) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '4rem 2rem', position: 'relative', zIndex: 1, width: '100%' }}>
           <div className="about-hero-grid">
@@ -195,20 +193,7 @@ export default function About() {
                 About BigBoss Corporate Consulting — our vision, mission, genesis, and the values that drive everything we do.
               </p>
             </div>
-            <div className="about-hero-img">
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(204,0,0,0.15) 0%, transparent 60%)', zIndex: 1 }} />
-              <Image
-                src={partnershipImg}
-                alt="BigBoss team celebrating a partnership"
-                fill
-                loading="eager"
-                sizes="(max-width: 900px) 100vw, 50vw"
-                style={{ objectFit: 'cover', filter: 'brightness(0.85) contrast(1.05)' }}
-              />
-              <div style={{ position: 'absolute', bottom: '1.5rem', left: '1.5rem', zIndex: 2, background: 'rgba(8,8,8,0.7)', backdropFilter: 'blur(8px)', padding: '0.75rem 1.25rem', borderLeft: '3px solid #CC0000' }}>
-                <p style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: '0.75rem', letterSpacing: '0.15em', color: '#CC0000', textTransform: 'uppercase', margin: 0 }}>Partnership &amp; Unity</p>
-              </div>
-            </div>
+            <HeroScene variant="about" contained />
           </div>
         </div>
       </section>

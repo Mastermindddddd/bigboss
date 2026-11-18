@@ -15,7 +15,7 @@ The corporate website for BigBoss Corporate Consulting, presenting its organisat
 - The corporate tagline is updated to “Organisation Transformation Solutions”.
 - Digital Solutions prices and subscriptions are reduced by 50% against the original schedule.
 - Seven interactive industry workspaces support distinct analysis tasks, alongside two original dashboard previews.
-- Glass navigation, animated hero scenes and responsive interactions include support for reduced-motion preferences.
+- Glass navigation, animated hero scenes and responsive interactions include support for reduced-motion preferences. Home, About and Services give the animated artwork its own layout column, with stacked layouts on smaller screens.
 
 ## Review the source and designs
 

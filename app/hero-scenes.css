@@ -13,5 +13,69 @@
 @media(max-width:800px){.bb-corporate-hero:not(.bb-hero-home) h1{max-width:100%;font-size:clamp(3rem,8vw,4.4rem)!important}.bb-corporate-hero:not(.bb-hero-home)>div:last-child>p{max-width:100%!important}.bb-corporate-hero:not(.bb-hero-home){min-height:540px!important}.bb-corporate-hero:not(.bb-hero-home)>div:last-child{padding-inline:1.5rem!important}}
 @media(prefers-reduced-motion:reduce){.bb-corporate-hero *,.hero-scene *,.hero-scene *:before,.hero-scene *:after,.bb-desktop-links *{animation:none!important;transition:none!important}.bb-corporate-hero h1{filter:none}.hero-visual-field,.hero-glass-stack{transform:none}.hero-glass-card:before{display:none}}
 
-/* Keep the live site imagery visible above the hero artwork. */
-.bb-hero-home .hero-scene,.bb-hero-services .hero-scene{z-index:0!important;opacity:.45}.bb-hero-home .hero-inner,.bb-hero-services .svc-hero-inner{position:relative;z-index:2}
+/* Corporate heroes reserve a real column for their animated visual. */
+.bb-hero-composed .hero-inner,
+.bb-hero-composed .about-hero-grid,
+.bb-hero-composed .svc-hero-inner {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4.5rem);
+  align-items: center;
+  isolation: isolate;
+}
+.bb-hero-composed h1 { max-width: 100% !important; }
+.bb-hero-composed .hero-inner > div:first-child,
+.bb-hero-composed .about-hero-grid > div:first-child,
+.bb-hero-composed .svc-hero-text { min-width: 0; position: relative; z-index: 2; }
+.bb-hero-home.bb-hero-composed > .hero-reveal { position: absolute !important; }
+.bb-hero-composed .hero-scene.hero-scene-contained {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: clamp(500px, 43vw, 620px);
+  min-width: 0;
+  min-height: 500px;
+  z-index: 1 !important;
+  opacity: 1 !important;
+  mask-image: none !important;
+  overflow: clip;
+  border-radius: 24px;
+  align-self: center;
+}
+.hero-scene-contained .hero-scene-heading {
+  display: block;
+  top: 7%;
+  left: 12%;
+  right: 5%;
+}
+.hero-scene-contained .hero-scene-heading > strong { font-size: clamp(1.4rem, 2vw, 2rem); }
+.hero-scene-contained .hero-visual-field { opacity: 1; }
+.hero-scene-contained .hero-glass-stack {
+  display: block;
+  top: 36%;
+  right: 8%;
+  width: 62%;
+  min-width: 0;
+  max-width: 350px;
+}
+.hero-scene-contained .hero-glass-card { padding: 1rem; }
+.hero-scene-contained .hero-glass-card b { font-size: .82rem; }
+.hero-scene-contained .hero-coordinate { display: none; }
+@media (max-width: 900px) {
+  .bb-hero-composed .hero-inner,
+  .bb-hero-composed .about-hero-grid,
+  .bb-hero-composed .svc-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .bb-hero-composed .hero-scene.hero-scene-contained {
+    height: 440px;
+    min-height: 440px;
+    max-width: 620px;
+    justify-self: center;
+  }
+  .hero-scene-contained .hero-glass-stack { top: 34%; right: 10%; width: 64%; }
+  .hero-scene-contained .hero-glass-card { padding: .85rem .9rem; margin-bottom: .65rem; }
+  .hero-scene-contained .hero-scene-heading > strong { font-size: 1.5rem; }
+  .hero-scene-contained .hero-glass-icon { width: 32px; height: 32px; }
+  .bb-hero-home.bb-hero-composed .hero-inner { padding-bottom: 5rem; }
+}

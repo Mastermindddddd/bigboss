@@ -16,7 +16,7 @@ const scenes={
 } as const;
 export type HeroVariant=keyof typeof scenes;
 
-export default function HeroScene({variant,embedded=false}:{variant:HeroVariant;embedded?:boolean}) {
+export default function HeroScene({variant,embedded=false,contained=false}:{variant:HeroVariant;embedded?:boolean;contained?:boolean}) {
   const canvasRef=useRef<HTMLCanvasElement>(null);const rootRef=useRef<HTMLDivElement>(null);const scene=scenes[variant];
   useEffect(()=>{
     const canvas=canvasRef.current;const root=rootRef.current;if(!canvas||!root)return;
@@ -48,7 +48,7 @@ export default function HeroScene({variant,embedded=false}:{variant:HeroVariant;
     document.addEventListener('visibilitychange',start);reduced.addEventListener('change',start);resize();start();
     return()=>{disposed=true;cancelAnimationFrame(frame);resizeObserver.disconnect();intersection.disconnect();section.removeEventListener('pointermove',move as EventListener);section.removeEventListener('pointerleave',leave);document.removeEventListener('visibilitychange',start);reduced.removeEventListener('change',start);};
   },[scene]);
-  return <div ref={rootRef} className={`hero-scene hero-scene-${variant} ${embedded?'hero-scene-embedded':''}`} style={{'--hero-accent':scene.color,'--hero-secondary':scene.secondary} as CSSProperties} aria-hidden="true">
+  return <div ref={rootRef} className={`hero-scene hero-scene-${variant} ${embedded?'hero-scene-embedded':''} ${contained?'hero-scene-contained':''}`} style={{'--hero-accent':scene.color,'--hero-secondary':scene.secondary} as CSSProperties} aria-hidden="true">
     <div className="hero-atmosphere atmosphere-one"/><div className="hero-atmosphere atmosphere-two"/>
     <div className="hero-visual-field"><div className="hero-orbital-plane plane-one"/><div className="hero-orbital-plane plane-two"/><canvas ref={canvasRef}/><div className="hero-coordinate coord-one"><i/> SOUTHERN AFRICA / CONNECTED</div><div className="hero-coordinate coord-two">PEOPLE + STRATEGY + SYSTEMS</div></div>
     {!embedded?<><div className="hero-scene-heading"><span>{scene.eyebrow}</span><strong>{scene.title}</strong></div><div className="hero-glass-stack">{scene.cards.map((label,index)=><div className={`hero-glass-card hero-glass-${index}`} key={label}><span className="hero-glass-icon">{index===0?<Network size={18}/>:index===1?<Layers3 size={18}/>:<Activity size={18}/>}</span><div><small>0{index+1} / BIGBOSS</small><b>{label}</b><div className="hero-glass-track"><i/><i/><i/><i/></div></div><ShieldCheck size={13}/></div>)}</div></>:<div className="hero-digital-glass"><span><i/> BIGBOSS / DIGITAL SYSTEMS</span><strong>From data to decisions.</strong><div><span>Architecture</span><span>Intelligence</span><span>Execution</span></div></div>}

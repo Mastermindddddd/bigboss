@@ -2,10 +2,8 @@
 import HeroScene from '@/app/components/HeroScene';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Briefcase, Globe, Users, Settings, Zap, Shield, GraduationCap, ArrowRight } from 'lucide-react';
 
-import suitImg from '@/public/images/suit.png';
 
 const services = [
   {
@@ -223,8 +221,7 @@ export default function Services() {
       <style>{servicesStyles}</style>
 
       {/* HERO */}
-      <section className="bb-corporate-hero bb-hero-services" style={{ minHeight: '65vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #0D0000)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
-        <HeroScene variant="services" />
+      <section className="bb-corporate-hero bb-hero-services bb-hero-composed" style={{ minHeight: '65vh', display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #080808, #0D0000)', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `linear-gradient(rgba(204,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(204,0,0,0.04) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
         <div className="svc-watermark">EXPERT</div>
 
@@ -247,28 +244,7 @@ export default function Services() {
             <Link href="/contact" className="btn-primary svc-cta-btn">Request a Proposal</Link>
           </div>
 
-          <div className="svc-hero-img-wrap">
-            <div style={{ position: 'relative', width: '100%', maxWidth: '380px', aspectRatio: '736 / 920' }}>
-              <div style={{
-                position: 'absolute', inset: '-10%',
-                background: 'radial-gradient(circle at 50% 40%, rgba(204,0,0,0.22) 0%, transparent 65%)',
-                filter: 'blur(30px)', zIndex: 0,
-              }} />
-              <Image
-                src={suitImg}
-                alt="Silhouette of a businessman in a suit and red tie, representing BigBoss expertise"
-                fill
-                priority
-                sizes="(max-width: 900px) 60vw, 380px"
-                style={{ objectFit: 'contain', zIndex: 1 }}
-              />
-              <div style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0, height: '25%',
-                background: 'linear-gradient(to top, #0D0000 0%, transparent 100%)',
-                zIndex: 2, pointerEvents: 'none',
-              }} />
-            </div>
-          </div>
+          <HeroScene variant="services" contained />
         </div>
       </section>
 
